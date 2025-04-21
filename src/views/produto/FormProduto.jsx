@@ -43,7 +43,7 @@ export default function FormProduto () {
 
                             </Form.Group>
                             
-                            <Form.Group>
+                            <Form.Group widths='equal'>
 
                                 <Form.Input
                                     fluid
@@ -53,7 +53,6 @@ export default function FormProduto () {
                                         resize: 'both',  
                                         overflow: 'auto',  
                                         minHeight: '80px',  
-                                        width: '1130px',
                                     }}>
                                 </Form.Input>
 
