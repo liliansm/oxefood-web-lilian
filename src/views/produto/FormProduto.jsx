@@ -1,12 +1,14 @@
 import InputMask from 'comigo-tech-react-input-mask';
 import React from "react";
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
+import MenuSistema from '../../MenuSistema';
 
 export default function FormProduto () {
 
     return (
 
         <div>
+            <MenuSistema tela={'entregador'} />
 
             <div style={{marginTop: '3%'}}>
 

@@ -1,15 +1,59 @@
+import axios from "axios";
 import InputMask from 'comigo-tech-react-input-mask';
 import React, { useState } from "react";
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 import MenuSistema from '../../MenuSistema';
 
-export default function FormProduto() {
-    const [ativo, setAtivo] = useState('sim');
+export default function FormEntregador() {
+    const [ativo, setAtivo] = useState(true);
+    const [nome, setNome] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [rg, setRg] = useState('');
+    const [dataNascimento, setDataNascimento] = useState('');
+    const [foneCelular, setFoneCelular] = useState('');
+    const [foneFixo, setFoneFixo] = useState('');
+    const [qtdEntregasRealizadas, setQtdEntregasRealizadas] = useState('');
+    const [valorFrete, setValorFrete] = useState('');
+    const [enderecoRua, setEnderecoRua] = useState('');
+    const [enderecoNumero, setEnderecoNumero] = useState('');
+    const [enderecoBairro, setEnderecoBairro] = useState('');
+    const [enderecoCidade, setEnderecoCidade] = useState('');
+    const [enderecoCep, setEnderecoCep] = useState('');
+    const [enderecoUf, setEnderecoUf] = useState('');
+    const [enderecoComplemento, setEnderecoComplemento] = useState('');
+
+    function salvar() {
+        let entregadorRequest = {
+            nome: nome,
+            cpf: cpf,
+            rg: rg,
+            dataNascimento: dataNascimento.split('/').reverse().join('-'),
+            foneCelular: foneCelular,
+            foneFixo: foneFixo,
+            qtdEntregasRealizadas: parseInt(qtdEntregasRealizadas),
+            valorFrete: parseFloat(valorFrete.replace(',', '.')),
+            enderecoRua: enderecoRua,
+            enderecoNumero: enderecoNumero,
+            enderecoBairro: enderecoBairro,
+            enderecoCidade: enderecoCidade,
+            enderecoCep: enderecoCep,
+            enderecoUf: enderecoUf,
+            enderecoComplemento: enderecoComplemento,
+            ativo: ativo
+        };
+
+        axios.post("http://localhost:8080/api/entregador", entregadorRequest)
+            .then((response) => {
+                console.log('Entregador cadastrado com sucesso.');
+            })
+            .catch((error) => {
+                console.log('Erro ao incluir o entregador:', error);
+            });
+    }
 
     return (
         <div>
-
-            <MenuSistema tela={'cliente'} />
+            <MenuSistema tela={'entregador'} />
             
             <div style={{ marginTop: '3%' }}>
                 <Container textAlign='justified'>
@@ -29,6 +73,8 @@ export default function FormProduto() {
                                     fluid
                                     label='Nome'
                                     maxLength="100"
+                                    value={nome}
+                                    onChange={e => setNome(e.target.value)}
                                 />
                                 <Form.Input
                                     required
@@ -38,6 +84,8 @@ export default function FormProduto() {
                                     <InputMask
                                         required
                                         mask="999.999.999-99"
+                                        value={cpf}
+                                        onChange={e => setCpf(e.target.value)}
                                     /> 
                                 </Form.Input>
                                 <Form.Input
@@ -45,7 +93,9 @@ export default function FormProduto() {
                                     label='RG'
                                 >
                                     <InputMask
-                                        mask="99999999"
+                                        mask="9999999999"
+                                        value={rg}
+                                        onChange={e => setRg(e.target.value)}
                                     />
                                 </Form.Input>
                             </Form.Group>
@@ -57,6 +107,8 @@ export default function FormProduto() {
                                 >
                                     <InputMask
                                         mask="99/99/9999"
+                                        value={dataNascimento}
+                                        onChange={e => setDataNascimento(e.target.value)}
                                     />
                                 </Form.Input>
                                 <Form.Input
@@ -66,6 +118,8 @@ export default function FormProduto() {
                                 >
                                     <InputMask
                                         mask="(99)99999-9999"
+                                        value={foneCelular}
+                                        onChange={e => setFoneCelular(e.target.value)}
                                     />
                                 </Form.Input>
                                 <Form.Input
@@ -73,12 +127,17 @@ export default function FormProduto() {
                                     label='Fone Fixo'
                                 >
                                     <InputMask
-                                        mask="(99)99999-9999"
+                                        mask="(99)9999-9999"
+                                        value={foneFixo}
+                                        onChange={e => setFoneFixo(e.target.value)}
                                     />
                                 </Form.Input>
                                 <Form.Input
                                     fluid
                                     label='QTD Entregas Realizadas'
+                                    type="number"
+                                    value={qtdEntregasRealizadas}
+                                    onChange={e => setQtdEntregasRealizadas(e.target.value)}
                                 />
                                 <Form.Input
                                     fluid
@@ -86,6 +145,8 @@ export default function FormProduto() {
                                 >
                                     <InputMask
                                         mask="9999,99"
+                                        value={valorFrete}
+                                        onChange={e => setValorFrete(e.target.value)}
                                     />
                                 </Form.Input>
                             </Form.Group>
@@ -94,10 +155,14 @@ export default function FormProduto() {
                                 <Form.Input
                                     fluid
                                     label='Rua'
+                                    value={enderecoRua}
+                                    onChange={e => setEnderecoRua(e.target.value)}
                                 />
                                 <Form.Input
                                     fluid
                                     label='Número'
+                                    value={enderecoNumero}
+                                    onChange={e => setEnderecoNumero(e.target.value)}
                                 />
                             </Form.Group>
 
@@ -105,10 +170,14 @@ export default function FormProduto() {
                                 <Form.Input
                                     fluid
                                     label='Bairro'
+                                    value={enderecoBairro}
+                                    onChange={e => setEnderecoBairro(e.target.value)}
                                 />
                                 <Form.Input
                                     fluid
                                     label='Cidade'
+                                    value={enderecoCidade}
+                                    onChange={e => setEnderecoCidade(e.target.value)}
                                 />
                                 <Form.Input
                                     fluid
@@ -116,6 +185,8 @@ export default function FormProduto() {
                                 >
                                     <InputMask
                                         mask='99999-999'
+                                        value={enderecoCep}
+                                        onChange={e => setEnderecoCep(e.target.value)}
                                     />
                                 </Form.Input>
                             </Form.Group>
@@ -154,6 +225,8 @@ export default function FormProduto() {
                                         { key: 'se', value: 'SE', text: 'Sergipe' },
                                         { key: 'to', value: 'TO', text: 'Tocantins' },
                                     ]}
+                                    value={enderecoUf}
+                                    onChange={(e, { value }) => setEnderecoUf(value)}
                                 />
                             </Form.Group>
 
@@ -161,6 +234,8 @@ export default function FormProduto() {
                                 <Form.Input
                                     fluid
                                     label='Complemento'
+                                    value={enderecoComplemento}
+                                    onChange={e => setEnderecoComplemento(e.target.value)}
                                 />
                             </Form.Group>
 
@@ -170,15 +245,15 @@ export default function FormProduto() {
                                     <Form.Group inline>
                                         <Form.Radio
                                             label='Sim'
-                                            value='sim'
-                                            checked={ativo === 'sim'}
-                                            onChange={() => setAtivo('sim')}
+                                            value={true}
+                                            checked={ativo === true}
+                                            onChange={() => setAtivo(true)}
                                         />
                                         <Form.Radio
                                             label='Não'
-                                            value='nao'
-                                            checked={ativo === 'nao'}
-                                            onChange={() => setAtivo('nao')}
+                                            value={false}
+                                            checked={ativo === false}
+                                            onChange={() => setAtivo(false)}
                                         />
                                     </Form.Group>
                                 </Form.Field>
@@ -193,6 +268,7 @@ export default function FormProduto() {
                                 icon
                                 labelPosition='left'
                                 color='orange'
+                                onClick={() => window.location.href = '/list-entregador'}
                             >
                                 <Icon name='reply' />
                                 Listar
@@ -205,6 +281,7 @@ export default function FormProduto() {
                                 labelPosition='left'
                                 color='blue'
                                 floated='right'
+                                onClick={() => salvar()}
                             >
                                 <Icon name='save' />
                                 Salvar
