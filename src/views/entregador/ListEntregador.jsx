@@ -1,17 +1,24 @@
 import axios from 'axios';
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Container, Divider, Icon, Modal, Table } from 'semantic-ui-react';
+import { Button, Container, Divider, Icon, Modal, Table , Header} from 'semantic-ui-react';
 import MenuSistema from '../../MenuSistema';
 
 export default function ListEntregador () {
    const [lista, setLista] = useState([]);
    const [open, setOpen] = useState(false); 
    const [entregadorSelecionado, setEntregadorSelecionado] = useState(null); 
+   const [openModal, setOpenModal] = useState(false);
+   const [idRemover, setIdRemover] = useState();
 
    useEffect(() => {
        carregarLista();
    }, [])
+
+   function confirmaRemover(id) {
+       setOpenModal(true)
+       setIdRemover(id)
+   }
 
    function carregarLista() {
 
@@ -40,6 +47,24 @@ export default function ListEntregador () {
     function fecharModal() {
         setOpen(false);
     }
+
+    async function remover() {
+
+       await axios.delete('http://localhost:8080/api/entregador/' + idRemover)
+       .then((response) => {
+ 
+           console.log('Entregador removido com sucesso.')
+ 
+           axios.get("http://localhost:8080/api/entregador")
+           .then((response) => {
+               setLista(response.data)
+           })
+       })
+       .catch((error) => {
+           console.log('Erro ao remover um Entregador.')
+       })
+       setOpenModal(false)
+   }
 
    return(
     <div>
@@ -92,7 +117,7 @@ export default function ListEntregador () {
                                           color='green'
                                           title='Clique aqui para editar os dados deste entregador'
                                           icon>
-                                               <Icon name='edit' />
+                                               <Link to="/form-entregador" state={{id: entregador.id}} style={{color: 'green'}}> <Icon name='edit' /> </Link>
                                       </Button> &nbsp;
 
                                       <Button
@@ -100,7 +125,8 @@ export default function ListEntregador () {
                                                circular
                                                color='red'
                                                title='Clique aqui para remover este entregador'
-                                               icon>
+                                               icon
+                                               onClick={e => confirmaRemover(entregador.id)}>
                                                    <Icon name='trash' />
                                         </Button> &nbsp;
 
@@ -150,6 +176,25 @@ export default function ListEntregador () {
                    </Modal.Actions>
                </Modal>
            </div>
+           <Modal
+                basic
+                onClose={() => setOpenModal(false)}
+                onOpen={() => setOpenModal(true)}
+                open={openModal}
+           >
+                <Header icon>
+                    <Icon name='trash' />
+                    <div style={{marginTop: '5%'}}> Tem certeza que deseja remover esse registro? </div>
+                </Header>
+                          <Modal.Actions>
+                              <Button basic color='red' inverted onClick={() => setOpenModal(false)}>
+                                  <Icon name='remove' /> Não
+                              </Button>
+                              <Button color='green' inverted onClick={() => remover()}>
+                                  <Icon name='checkmark' /> Sim
+                              </Button>
+                          </Modal.Actions>
+                    </Modal>
 
        </div>
    )
