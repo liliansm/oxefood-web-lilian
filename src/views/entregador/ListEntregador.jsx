@@ -73,7 +73,7 @@ export default function ListEntregador () {
 
             <Container textAlign='justified' >
 
-                <h2> Cliente </h2>
+                <h2> Entregador </h2>
                 <Divider />
 
                 <div style={{marginTop: '4%'}}>

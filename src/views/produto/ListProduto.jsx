@@ -52,7 +52,7 @@ export default function ListProduto () {
 
             <Container textAlign='justified' >
 
-                <h2> Cliente </h2>
+                <h2> Produto </h2>
                 <Divider />
 
                 <div style={{marginTop: '4%'}}>

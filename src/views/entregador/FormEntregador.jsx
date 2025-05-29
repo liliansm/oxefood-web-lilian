@@ -27,32 +27,49 @@ export default function FormEntregador() {
     const [enderecoUf, setEnderecoUf] = useState('');
     const [enderecoComplemento, setEnderecoComplemento] = useState('');
 
-    useEffect(() => {
-    if (state != null && state.id != null) {
-        axios.get("http://localhost:8080/api/entregador/" + state.id)
-            .then((response) => {
-                setIdEntregador(response.data.id);
-                setAtivo(response.data.ativo);
-                setNome(response.data.nome);
-                setCpf(response.data.cpf);
-                setRg(response.data.rg);
-                setDataNascimento(formatarData(response.data.dataNascimento));
-                setFoneCelular(response.data.foneCelular);
-                setFoneFixo(response.data.foneFixo);
-                setQtdEntregasRealizadas(response.data.qtdEntregasRealizadas);
-                setValorFrete(response.data.valorFrete);
-                setEnderecoRua(response.data.enderecoRua);
-                setEnderecoNumero(response.data.enderecoNumero);
-                setEnderecoBairro(response.data.enderecoBairro);
-                setEnderecoCidade(response.data.enderecoCidade);
-                setEnderecoCep(response.data.enderecoCep);
-                setEnderecoUf(response.data.enderecoUf);
-                setEnderecoComplemento(response.data.enderecoComplemento);
-            })
-            .catch((error) => {
-                console.error("Erro ao carregar dados do entregador:", error);
-            });
+    function formatarData(dataParam) {
+        if (dataParam === null || dataParam === '' || dataParam === undefined) {
+            return '';
+        }
+        
+        if (dataParam.includes('/')) {
+            return dataParam;
+        }
+
+        const partes = dataParam.split('-');
+        if (partes.length === 3) {
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        return dataParam;
     }
+
+    useEffect(() => {
+        if (state != null && state.id != null) {
+            axios.get("http://localhost:8080/api/entregador/" + state.id)
+                .then((response) => {
+                    setIdEntregador(response.data.id);
+                    setAtivo(response.data.ativo);
+                    setNome(response.data.nome);
+                    setCpf(response.data.cpf);
+                    setRg(response.data.rg);
+                    setDataNascimento(formatarData(response.data.dataNascimento));
+                    setFoneCelular(response.data.foneCelular);
+                    setFoneFixo(response.data.foneFixo);
+                    setQtdEntregasRealizadas(response.data.qtdEntregasRealizadas);
+                    setValorFrete(response.data.valorFrete);
+                    setEnderecoRua(response.data.enderecoRua);
+                    setEnderecoNumero(response.data.enderecoNumero);
+                    setEnderecoBairro(response.data.enderecoBairro);
+                    setEnderecoCidade(response.data.enderecoCidade);
+                    setEnderecoCep(response.data.enderecoCep);
+                    setEnderecoUf(response.data.enderecoUf);
+                    setEnderecoComplemento(response.data.enderecoComplemento);
+                })
+                .catch((error) => {
+                    console.error("Erro ao carregar dados do entregador:", error);
+                });
+        }
     }, [state])
 
     function salvar() {
@@ -64,7 +81,7 @@ export default function FormEntregador() {
             foneCelular: foneCelular,
             foneFixo: foneFixo,
             qtdEntregasRealizadas: parseInt(qtdEntregasRealizadas),
-            valorFrete: parseFloat(valorFrete.replace(',', '.')),
+            valorFrete: parseFloat(valorFrete),
             enderecoRua: enderecoRua,
             enderecoNumero: enderecoNumero,
             enderecoBairro: enderecoBairro,
@@ -75,16 +92,16 @@ export default function FormEntregador() {
             ativo: ativo
         };
 
-        if (idEntregador != null) { //Alteração:
-           axios.put("http://localhost:8080/api/entregador/" + idEntregador, entregadorRequest)
-           .then((response) => { console.log('Entregador alterado com sucesso.') })
-           .catch((error) => { console.log('Erro ao alter um entregador.') })
-       } else { //Cadastro:
-           axios.post("http://localhost:8080/api/entregador", entregadorRequest)
-           .then((response) => { console.log('Entregador cadastrado com sucesso.') })
-           .catch((error) => { console.log('Erro ao incluir o entregador.') })
-       }
-
+        if (idEntregador != null) {
+        axios.put("http://localhost:8080/api/entregador/" + idEntregador, entregadorRequest)
+            .then((response) => {
+                console.log('Entregador alterado com sucesso.');
+            })
+            .catch((error) => {
+                console.log('Erro ao alterar o entregador:', error);
+            });
+        } else {
+        console.log("Conteúdo do entregadorRequest:", entregadorRequest);
         axios.post("http://localhost:8080/api/entregador", entregadorRequest)
             .then((response) => {
                 console.log('Entregador cadastrado com sucesso.');
@@ -92,6 +109,7 @@ export default function FormEntregador() {
             .catch((error) => {
                 console.log('Erro ao incluir o entregador:', error);
             });
+    }
     }
 
     return (
@@ -185,13 +203,11 @@ export default function FormEntregador() {
                                 <Form.Input
                                     fluid
                                     label='Valor Por Frete'
-                                >
-                                    <InputMask
-                                        mask="9999,99"
-                                        value={valorFrete}
-                                        onChange={e => setValorFrete(e.target.value)}
-                                    />
-                                </Form.Input>
+                                    type="number"
+                                    step="0.01"
+                                    value={valorFrete}
+                                    onChange={e => setValorFrete(e.target.value)}
+                                />
                             </Form.Group>
 
                             <Form.Group widths='equal'>
@@ -239,6 +255,8 @@ export default function FormEntregador() {
                                     fluid
                                     label='UF'
                                     placeholder='Selecione'
+                                    value={enderecoUf}
+                                    onChange={(e, { value }) => setEnderecoUf(value)}
                                     options={[
                                         { key: 'ac', value: 'AC', text: 'Acre' },
                                         { key: 'al', value: 'AL', text: 'Alagoas' },
@@ -268,8 +286,6 @@ export default function FormEntregador() {
                                         { key: 'se', value: 'SE', text: 'Sergipe' },
                                         { key: 'to', value: 'TO', text: 'Tocantins' },
                                     ]}
-                                    value={enderecoUf}
-                                    onChange={(e, { value }) => setEnderecoUf(value)}
                                 />
                             </Form.Group>
 

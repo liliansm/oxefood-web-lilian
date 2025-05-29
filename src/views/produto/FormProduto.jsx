@@ -52,13 +52,13 @@ export default function FormProduto() {
            .catch((error) => { console.log('Erro ao incluir o produto.') })
        }
 
-      axios.post("http://localhost:8080/api/produto", produtoRequest)
-		.then((response) => {
-		     console.log('Cliente cadastrado com sucesso.')
-		})
-		.catch((error) => {
-		     console.log('Erro ao incluir o um cliente.')
-		})
+    //   axios.post("http://localhost:8080/api/produto", produtoRequest)
+	// 	.then((response) => {
+	// 	     console.log('Cliente cadastrado com sucesso.')
+	// 	})
+	// 	.catch((error) => {
+	// 	     console.log('Erro ao incluir o um cliente.')
+	// 	})
     }
 
     return (
