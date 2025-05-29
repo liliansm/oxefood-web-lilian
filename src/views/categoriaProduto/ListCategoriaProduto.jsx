@@ -1,7 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Container, Divider, Icon, Table, Header, Modal } from 'semantic-ui-react';
+import { Button, Container, Divider, Header, Icon, Modal, Table } from 'semantic-ui-react';
 import MenuSistema from '../../MenuSistema';
 
 export function ListCategoriaProduto() {
@@ -15,7 +15,7 @@ export function ListCategoriaProduto() {
 
     function carregarLista() {
 
-        axios.get("http://localhost:8081/api/produto/categoria")
+        axios.get("http://localhost:8080/api/produto/categoria")
             .then((response) => {
                 setLista(response.data)
             })
@@ -26,12 +26,12 @@ export function ListCategoriaProduto() {
 
     async function remover() {
 
-        await axios.delete('http://localhost:8081/api/produto/categoria/' + idRemover)
+        await axios.delete('http://localhost:8080/api/produto/categoria/' + idRemover)
             .then((response) => {
 
                 console.log('Categoria removida com sucesso.')
 
-                axios.get("http://localhost:8081/api/produto/categoria")
+                axios.get("http://localhost:8080/api/produto/categoria")
                     .then((response) => {
                         setLista(response.data)
                     })

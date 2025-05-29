@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import axios from 'axios';
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Icon } from "semantic-ui-react";
 import MenuSistema from "../../MenuSistema";
-import axios from 'axios';
-import { Link, useLocation } from "react-router-dom";
 
 export default function FormCategoriaProduto(){
     const[descricao, setDescricao] = useState();
@@ -12,7 +12,7 @@ export default function FormCategoriaProduto(){
 
         useEffect(() => {
         if (state != null && state.id != null) {
-            axios.get("http://localhost:8081/api/produto/categoria/" + state.id)
+            axios.get("http://localhost:8080/api/produto/categoria/" + state.id)
                 .then((response) => {
                     setIdCategoriaProduto(response.data.id)
                     setDescricao(response.data.descricao)
@@ -27,12 +27,12 @@ export default function FormCategoriaProduto(){
         }
 
         if (idCategoriaProduto != null) {
-            axios.put("http://localhost:8081/api/produto/categoria/" + idCategoriaProduto, categoriaRequest)
+            axios.put("http://localhost:8080/api/produto/categoria/" + idCategoriaProduto, categoriaRequest)
                 .then((response) => { console.log('Categoria do produto alterada com sucesso.') })
                 .catch((error) => { console.log('Erro ao alterar uma categoria.') })
 
         } else {
-            axios.post("http://localhost:8081/api/produto/categoria", categoriaRequest)
+            axios.post("http://localhost:8080/api/produto/categoria", categoriaRequest)
                 .then((response) => {
                     console.log('Categoria de produto cadastrada com sucesso.')
                     // console.log(categoriaRequest)
