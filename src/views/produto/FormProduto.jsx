@@ -44,35 +44,43 @@ export default function FormProduto() {
 
     }, [state])
 
-    function salvar() {
-        let produtoRequest = {
-            codigo: codigo,
-            idCategoria: idCategoria,
-            titulo: titulo,
-            descricao: descricao,
-            valorUnitario: parseFloat(valorUnitario.replace(',', '.')),
-            tempoEntregaMinimo: parseInt(tempoEntregaMinimo),
-            tempoEntregaMaximo: parseInt(tempoEntregaMaximo),
-        }
-
-        if (idProduto != null) { //Alteração:
-           axios.put("http://localhost:8080/api/produto/" + idProduto, produtoRequest)
-           .then((response) => { console.log('Produto alterado com sucesso.') })
-           .catch((error) => { console.log('Erro ao alter um produto.') })
-       } else { //Cadastro:
-           axios.post("http://localhost:8080/api/produto", produtoRequest)
-           .then((response) => { console.log('Produto cadastrado com sucesso.') })
-           .catch((error) => { console.log('Erro ao incluir o produto.') })
-       }
-
-    //   axios.post("http://localhost:8080/api/produto", produtoRequest)
-	// 	.then((response) => {
-	// 	     console.log('Cliente cadastrado com sucesso.')
-	// 	})
-	// 	.catch((error) => {
-	// 	     console.log('Erro ao incluir o um cliente.')
-	// 	})
+function salvar() {
+    let produtoRequest = {
+        codigo: codigo,
+        idCategoria: idCategoria,
+        titulo: titulo,
+        descricao: descricao,
+        valorUnitario: parseFloat(
+            (valorUnitario || '0')  // Garante que não seja null/undefined
+            .toString()             // Converte para string
+            .replace(',', '.')      // Substitui vírgula por ponto
+        ),
+        tempoEntregaMinimo: parseInt(tempoEntregaMinimo || 0),
+        tempoEntregaMaximo: parseInt(tempoEntregaMaximo || 0),
     }
+
+    if (idProduto != null) {
+        axios.put("http://localhost:8080/api/produto/" + idProduto, produtoRequest)
+        .then((response) => { 
+            console.log('Produto alterado com sucesso.')
+            window.location.href = '/list-produto' // Redireciona após sucesso
+        })
+        .catch((error) => { 
+            console.log('Erro ao alterar um produto.')
+            console.error(error) // Mostra detalhes do erro
+        })
+    } else {
+        axios.post("http://localhost:8080/api/produto", produtoRequest)
+        .then((response) => { 
+            console.log('Produto cadastrado com sucesso.')
+            window.location.href = '/list-produto' // Redireciona após sucesso
+        })
+        .catch((error) => { 
+            console.log('Erro ao incluir o produto.')
+            console.error(error) // Mostra detalhes do erro
+        })
+    }
+}
 
     return (
         <div>
@@ -147,7 +155,7 @@ export default function FormProduto() {
                                     <InputMask
                                         required
                                         mask="9999,99"
-                                        value={valorUnitario || ''} 
+                                        value={valorUnitario ? String(valorUnitario) : ''} 
                                         onChange={e => setValorUnitario(e.target.value)}
                                     />
                                 </Form.Input>
