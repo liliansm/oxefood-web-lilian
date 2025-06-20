@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
 import InputMask from 'comigo-tech-react-input-mask';
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, FormGroup, Icon } from 'semantic-ui-react';
 import MenuSistema from '../../MenuSistema';
+import { notifySuccess } from '../../views/util/Util';
 
 export default function FormProduto() {
 
@@ -62,7 +63,7 @@ function salvar() {
     if (idProduto != null) {
         axios.put("http://localhost:8080/api/produto/" + idProduto, produtoRequest)
         .then((response) => { 
-            console.log('Produto alterado com sucesso.')
+            notifySuccess('Produto Alterado com sucesso.')
             window.location.href = '/list-produto' // Redireciona após sucesso
         })
         .catch((error) => { 
@@ -72,7 +73,7 @@ function salvar() {
     } else {
         axios.post("http://localhost:8080/api/produto", produtoRequest)
         .then((response) => { 
-            console.log('Produto cadastrado com sucesso.')
+            notifySuccess('Produto cadastrado com sucesso.')
             window.location.href = '/list-produto' // Redireciona após sucesso
         })
         .catch((error) => { 
